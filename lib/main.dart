@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:simple_animations/animation_builder/play_animation_builder.dart';
 
 void main() {
   runApp(const MyApp());
@@ -33,22 +34,13 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'Maybe I should put something here'),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
+  const MyHomePage({Key? key, required this.title}) : super(key: key);
 
   final String title;
 
@@ -57,55 +49,62 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<Widget> _buttons = [];
+  int _idCounter = 0;
+  Set<int> _availableIds = Set();
+  Map<int, PlayAnimationBuilder<double>> _buttons = {};
+
+  void _addButton(TapDownDetails details) {
+    setState(() {
+      int id;
+      if (_availableIds.isNotEmpty) {
+        id = _availableIds.first;
+        _availableIds.remove(id);
+      } else {
+        id = _idCounter++;
+      }
+      _buttons[id] = PlayAnimationBuilder<double>(
+        key: ValueKey(id),
+        tween: Tween(begin: 10, end: 0),
+        duration: Duration(milliseconds: 750),
+        builder: (context, value, _) {
+          return Positioned(
+            left: details.localPosition.dx - 13,
+            top: details.localPosition.dy - 13 - (-value * 2),
+            child: Image.asset(
+              "assets/x1multiplier.png",
+              width: 26,
+              opacity: AlwaysStoppedAnimation(value / 10),
+            ),
+          );
+        },
+        onCompleted: () {
+          setState(() {
+            _buttons.remove(id);
+            _availableIds.add(id);
+          });
+        },
+      );
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
       body: SizedBox(
         height: double.infinity,
         width: double.infinity,
         child: GestureDetector(
-          onTapDown: (details) {
-            setState(() {
-              _buttons.add(
-                Positioned(
-                  left: details.localPosition.dx - 13,
-                  top: details.localPosition.dy - 13,
-                  child: Image.asset(
-                    "assets/x1multiplier.png",
-                    width: 26,
-                  ),
-                ),
-              );
-            });
-            Timer(Duration(seconds: 2), () {
-              setState(() {
-                _buttons.removeAt(0);
-              });
-            });
-          },
+          onTapDown: _addButton,
           child: Stack(
             children: [
               Center(
                 child: Image.asset("assets/balloon.png"),
               ),
-              ..._buttons,
+              ..._buttons.values,
             ],
           ),
         ),
