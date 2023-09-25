@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:simple_animations/animation_builder/play_animation_builder.dart';
 
@@ -50,11 +48,15 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _idCounter = 0;
-  Set<int> _availableIds = Set();
-  Map<int, PlayAnimationBuilder<double>> _buttons = {};
+  final Set<int> _availableIds = {};
+  final Map<int, PlayAnimationBuilder<double>> _buttons = {};
+
+  double clicks = 0;
+  double multiplier = 1;
 
   void _addButton(TapDownDetails details) {
     setState(() {
+      clicks += multiplier;
       int id;
       if (_availableIds.isNotEmpty) {
         id = _availableIds.first;
@@ -65,7 +67,7 @@ class _MyHomePageState extends State<MyHomePage> {
       _buttons[id] = PlayAnimationBuilder<double>(
         key: ValueKey(id),
         tween: Tween(begin: 10, end: 0),
-        duration: Duration(milliseconds: 750),
+        duration: const Duration(milliseconds: 750),
         builder: (context, value, _) {
           return Positioned(
             left: details.localPosition.dx - 13,
@@ -87,6 +89,21 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  String getScoreString() {
+    if (clicks < 1000) {
+      return clicks.toStringAsFixed(0);
+    } else if (clicks < 1000000) {
+      return "${(clicks / 1000).toStringAsFixed(2)}k";
+    } else if (clicks < 1000000000) {
+      return "${(clicks / 1000000).toStringAsFixed(2)}m";
+    } else if (clicks < 1000000000000) {
+      return "${(clicks / 1000000000).toStringAsFixed(2)}b";
+    } else if (clicks < 1000000000000000) {
+      return "${(clicks / 1000000000000).toStringAsFixed(2)}t";
+    }
+    return "Congrats! We haven't coded this yet...";
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -101,6 +118,17 @@ class _MyHomePageState extends State<MyHomePage> {
           onTapDown: _addButton,
           child: Stack(
             children: [
+              Positioned(
+                child: Row(
+                  children: [
+                    Image.asset(
+                      "assets/score.png",
+                      width: 100,
+                    ),
+                    Text(getScoreString()),
+                  ],
+                ),
+              ),
               Center(
                 child: Image.asset("assets/balloon.png"),
               ),
