@@ -1,6 +1,6 @@
 
 # Balloon Clicker Android APP
-
+> This app is currently under development, which means there may be errors
 
 
 ## Introduction
@@ -24,3 +24,8 @@ To run Balloon Clicker, you'll need:
 - **Search:** Search for "Balloon Clicker" in the store.
 - **Install:** Tap the "Install" button to download and install the game.
 - **Open:** Once installed, open the app from your app drawer.
+## How to Play
+- **Pop Balloons:** Tap on balloons to pop them.
+- **Earn Points:** Earn points for each popped balloon.
+- **Complete Achievements:** Achieve in-game goals to unlock special rewards.
+- **Compete:** Check the leaderboards to see how your score stacks up against other players.
