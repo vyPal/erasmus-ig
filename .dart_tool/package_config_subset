@@ -30,6 +30,14 @@ flutter_lints
 2.19
 file:///home/vypal/.pub-cache/hosted/pub.dev/flutter_lints-2.0.3/
 file:///home/vypal/.pub-cache/hosted/pub.dev/flutter_lints-2.0.3/lib/
+games_services
+2.12
+file:///home/vypal/.pub-cache/hosted/pub.dev/games_services-3.0.3/
+file:///home/vypal/.pub-cache/hosted/pub.dev/games_services-3.0.3/lib/
+games_services_platform_interface
+2.12
+file:///home/vypal/.pub-cache/hosted/pub.dev/games_services_platform_interface-3.0.3/
+file:///home/vypal/.pub-cache/hosted/pub.dev/games_services_platform_interface-3.0.3/lib/
 lints
 3.0
 file:///home/vypal/.pub-cache/hosted/pub.dev/lints-2.1.1/
@@ -50,6 +58,10 @@ path
 2.12
 file:///home/vypal/.pub-cache/hosted/pub.dev/path-1.8.3/
 file:///home/vypal/.pub-cache/hosted/pub.dev/path-1.8.3/lib/
+plugin_platform_interface
+2.19
+file:///home/vypal/.pub-cache/hosted/pub.dev/plugin_platform_interface-2.1.6/
+file:///home/vypal/.pub-cache/hosted/pub.dev/plugin_platform_interface-2.1.6/lib/
 simple_animations
 2.17
 file:///home/vypal/.pub-cache/hosted/pub.dev/simple_animations-5.0.2/

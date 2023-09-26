@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:simple_animations/animation_builder/play_animation_builder.dart';
 
@@ -12,7 +14,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Balloon Clicker',
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -32,7 +34,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Maybe I should put something here'),
+      home: const MyHomePage(title: 'Baloon Clicker'),
     );
   }
 }
@@ -50,9 +52,15 @@ class _MyHomePageState extends State<MyHomePage> {
   int _idCounter = 0;
   final Set<int> _availableIds = {};
   final Map<int, PlayAnimationBuilder<double>> _buttons = {};
+  final Map<int, PlayAnimationBuilder<double>> _balloons = {};
 
   double clicks = 0;
   double multiplier = 1;
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   void _addButton(TapDownDetails details) {
     setState(() {
@@ -65,23 +73,46 @@ class _MyHomePageState extends State<MyHomePage> {
         id = _idCounter++;
       }
       _buttons[id] = PlayAnimationBuilder<double>(
-        key: ValueKey(id),
         tween: Tween(begin: 10, end: 0),
         duration: const Duration(milliseconds: 750),
         builder: (context, value, _) {
           return Positioned(
             left: details.localPosition.dx - 13,
             top: details.localPosition.dy - 13 - (-value * 2),
-            child: Image.asset(
-              "assets/x1multiplier.png",
-              width: 26,
-              opacity: AlwaysStoppedAnimation(value / 10),
+            child: Opacity(
+              opacity: value / 10,
+              child: Text(
+                "+${multiplier.toStringAsFixed(0)}",
+                style: const TextStyle(fontSize: 24),
+              ),
             ),
           );
         },
         onCompleted: () {
           setState(() {
             _buttons.remove(id);
+          });
+        },
+      );
+      double screenHeight = MediaQuery.of(context).size.height;
+      double screenWidth = MediaQuery.of(context).size.width;
+      double yposition = Random().nextInt(screenWidth.toInt()).toDouble();
+      _balloons[id] = PlayAnimationBuilder<double>(
+        tween: Tween(begin: screenHeight + 100, end: 0),
+        duration: const Duration(milliseconds: 5000),
+        builder: (context, value, _) {
+          return Positioned(
+            left: yposition,
+            top: value - 100,
+            child: Image.asset(
+              "assets/balloon.png",
+              height: 100,
+            ),
+          );
+        },
+        onCompleted: () {
+          setState(() {
+            _balloons.remove(id);
             _availableIds.add(id);
           });
         },
@@ -110,30 +141,65 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
+        leading: IconButton(
+          icon: const Icon(Icons.menu),
+          onPressed: () {},
+        ),
       ),
-      body: SizedBox(
-        height: double.infinity,
-        width: double.infinity,
-        child: GestureDetector(
-          onTapDown: _addButton,
-          child: Stack(
-            children: [
-              Positioned(
-                child: Row(
-                  children: [
-                    Image.asset(
-                      "assets/score.png",
-                      width: 100,
-                    ),
-                    Text(getScoreString()),
-                  ],
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(15),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Spacer(),
+            FloatingActionButton.extended(
+              onPressed: () {},
+              label: const Text("Balloon"),
+            ),
+            const Spacer(),
+            FloatingActionButton.extended(
+              onPressed: () {},
+              label: const Text("Background"),
+            ),
+            const Spacer(),
+            FloatingActionButton(
+              onPressed: () {},
+              child: const Icon(Icons.question_mark),
+            ),
+            const Spacer(),
+          ],
+        ),
+      ),
+      body: Container(
+        color: const Color.fromARGB(255, 204, 204, 204),
+        child: SizedBox(
+          height: double.infinity,
+          width: double.infinity,
+          child: GestureDetector(
+            onTapDown: _addButton,
+            child: Stack(
+              children: [
+                ..._balloons.values,
+                Positioned(
+                  child: Row(
+                    children: [
+                      Image.asset(
+                        "assets/score.png",
+                        width: 100,
+                      ),
+                      Text(getScoreString()),
+                    ],
+                  ),
                 ),
-              ),
-              Center(
-                child: Image.asset("assets/balloon.png"),
-              ),
-              ..._buttons.values,
-            ],
+                Center(
+                  child: Image.asset(
+                    "assets/balloon.png",
+                    scale: 1.5,
+                  ),
+                ),
+                ..._buttons.values,
+              ],
+            ),
           ),
         ),
       ),
