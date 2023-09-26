@@ -29,3 +29,10 @@ To run Balloon Clicker, you'll need:
 - **Earn Points:** Earn points for each popped balloon.
 - **Complete Achievements:** Achieve in-game goals to unlock special rewards.
 - **Compete:** Check the leaderboards to see how your score stacks up against other players.
+
+## Settings
+Balloon Clicker offers several customizable settings to tailor your gaming experience:
+
+- **Sound Effects:** Toggle game sound effects on/off.
+- **Music:** Enable or disable background music.
+- **Vibration:** Enable or disable vibration feedback when tapping balloons.
