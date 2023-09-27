@@ -13,6 +13,12 @@ Welcome to Balloon Clicker, an exciting and addictive Android app where your goa
 - [ ]  **Sound Effects:** Engaging sound effects enhance the gaming experience.
 - [ ]  **Settings:** Customize your gaming experience with various settings.
 ## Getting Started
+
+### Links
+- [Website](Google.com)
+- [Issue Tracker](https://github.com/vyPal/erasmus-ig/issues)
+- [App Download](https://play.google.com/)
+
 ### Prerequisites
 To run Balloon Clicker, you'll need:
 
@@ -29,3 +35,24 @@ To run Balloon Clicker, you'll need:
 - **Earn Points:** Earn points for each popped balloon.
 - **Complete Achievements:** Achieve in-game goals to unlock special rewards.
 - **Compete:** Check the leaderboards to see how your score stacks up against other players.
+
+## Settings
+Balloon Clicker offers several customizable settings to tailor your gaming experience:
+
+- **Sound Effects:** Toggle game sound effects on/off.
+- **Music:** Enable or disable background music.
+- **Vibration:** Enable or disable vibration feedback when tapping balloons.
+
+## Development
+
+This app was developed using Dart and Flutter, two powerful frameworks for building cross-platform mobile applications. Dart is the programming language that Flutter is built with, and it provides a solid foundation for building efficient and performant apps. Flutter, on the other hand, is an open-source UI toolkit that allows you to create natively compiled applications for mobile, web, and desktop from a single codebase. 
+
+### Technologies Used
+
+- **Programming Language:** Dart
+- **Framework:** Flutter
+- **IDE:** VSC
+
+If you're interested in contributing to this project or exploring the source code, you can find it [here](https://github.com/vyPal/erasmus-ig).
+
+Feel free to reach out if you have any questions about the development process or if you'd like to collaborate on this project.
