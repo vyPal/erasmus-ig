@@ -7,7 +7,7 @@ import 'package:balloonclicker/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:simple_animations/animation_builder/play_animation_builder.dart';
+import 'package:simple_animations/simple_animations.dart';
 
 void main() {
   runApp(const MyApp());
@@ -45,6 +45,27 @@ class MyApp extends StatelessWidget {
   }
 }
 
+class Balloon {
+  double xPos;
+  double yPos;
+  String color;
+  int offset;
+
+  Balloon(
+      {required this.xPos,
+      required this.yPos,
+      required this.color,
+      required this.offset});
+
+  void letFloat(double amount) {
+    yPos -= amount;
+  }
+
+  bool isAbove() {
+    return yPos <= -100;
+  }
+}
+
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
 
@@ -55,10 +76,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _idCounter = 0;
-  final Set<int> _availableIds = {};
-  final Map<int, PlayAnimationBuilder<double>> _buttons = {};
-  final Map<int, PlayAnimationBuilder<double>> _balloons = {};
+  List<Balloon> balloons = [];
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   late SharedPreferences prefs;
@@ -80,75 +98,29 @@ class _MyHomePageState extends State<MyHomePage> {
     enableBalloons = prefs.getBool('enable_balloons') ?? true;
     balloonColor = prefs.getString('balloon_color') ?? "red";
     background = prefs.getInt('background') ?? 1;
+    clicks = prefs.getDouble('score') ?? 0;
     setState(() {});
   }
 
-  void _addButton(TapDownDetails details) {
+  void newAdd(TapDownDetails details) {
     HapticFeedback.heavyImpact();
-    setState(() {
-      clicks += multiplier;
-      int id;
-      if (_availableIds.isNotEmpty) {
-        id = _availableIds.first;
-        _availableIds.remove(id);
-      } else {
-        id = _idCounter++;
-      }
-      _buttons[id] = PlayAnimationBuilder<double>(
-        tween: Tween(begin: 10, end: 0),
-        duration: const Duration(milliseconds: 750),
-        builder: (context, value, _) {
-          return Positioned(
-            left: details.localPosition.dx - 13,
-            top: details.localPosition.dy - 13 - (-value * 2),
-            child: Opacity(
-              opacity: value / 10,
-              child: Text(
-                "+${multiplier.toStringAsFixed(0)}",
-                style: const TextStyle(fontSize: 24),
-              ),
-            ),
-          );
-        },
-        onCompleted: () {
-          setState(() {
-            _buttons.remove(id);
-            if (!enableBalloons) _availableIds.add(id);
-          });
-        },
-      );
-      if (enableBalloons) {
-        final List<String> myStrings = [
-          "red",
-          "green",
-          "blue",
-          "yellow",
-          "pink"
-        ];
-        final Random random = Random();
-        final String randomString = myStrings[random.nextInt(myStrings.length)];
-        _balloons[id] = PlayAnimationBuilder<double>(
-          tween: Tween(begin: details.localPosition.dy + 50, end: 0),
-          duration: const Duration(milliseconds: 1500),
-          builder: (context, value, _) {
-            return Positioned(
-              left: details.localPosition.dx - 40,
-              top: value - 100,
-              child: Image.asset(
-                "assets/balloon_$randomString.png",
-                height: 100,
-              ),
-            );
-          },
-          onCompleted: () {
-            setState(() {
-              _balloons.remove(id);
-              _availableIds.add(id);
-            });
-          },
-        );
-      }
-    });
+    clicks += multiplier;
+    setState(() {});
+    final List<String> myStrings = [
+      "red",
+      "green",
+      "blue",
+      "yellow",
+      "pink",
+      "sheep"
+    ];
+    final Random random = Random();
+    final String randomString = myStrings[random.nextInt(myStrings.length)];
+    balloons.add(Balloon(
+        xPos: details.localPosition.dx - 18,
+        yPos: details.localPosition.dy - 50,
+        color: randomString,
+        offset: random.nextInt(100)));
   }
 
   String getScoreString() {
@@ -168,6 +140,19 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _openDrawer() {
     _scaffoldKey.currentState?.openDrawer();
+  }
+
+  double calculateBalloonX(double value, double offset, double constantOffset) {
+    double amplitude = 5.0; // Maximum horizontal oscillation
+    double frequency = 3; // Adjust this value for the speed of oscillation
+
+    // Calculate the phase shift based on the offset and constantOffset
+    double phaseShift = (offset / 100 + constantOffset / 5) * 2 * pi;
+
+    // Calculate the horizontal position
+    double x = amplitude * sin(2 * pi * frequency * value / 10 + phaseShift);
+
+    return x;
   }
 
   @override
@@ -214,12 +199,6 @@ class _MyHomePageState extends State<MyHomePage> {
               label: const Text("Background"),
             ),
             const Spacer(),
-            FloatingActionButton(
-              heroTag: 'help',
-              onPressed: () {},
-              child: const Icon(Icons.question_mark),
-            ),
-            const Spacer(),
           ],
         ),
       ),
@@ -234,7 +213,7 @@ class _MyHomePageState extends State<MyHomePage> {
           height: double.infinity,
           width: double.infinity,
           child: GestureDetector(
-            onTapDown: _addButton,
+            onTapDown: newAdd,
             child: Stack(
               children: [
                 Positioned(
@@ -264,8 +243,39 @@ class _MyHomePageState extends State<MyHomePage> {
                     scale: 1.5,
                   ),
                 ),
-                ..._buttons.values,
-                ..._balloons.values,
+                LoopAnimationBuilder<double>(
+                  builder: (context, value, _) {
+                    List<Widget> stackItems = [];
+                    List<Balloon> nb = List.from(balloons);
+                    bool modified = false;
+                    for (Balloon b in balloons) {
+                      if (b.isAbove()) {
+                        nb.remove(b);
+                        modified = true;
+                        continue;
+                      }
+                      b.letFloat(10);
+                      b.xPos +=
+                          calculateBalloonX(value, b.offset.toDouble(), 5);
+                      stackItems.add(
+                        Positioned(
+                          top: b.yPos,
+                          left: b.xPos,
+                          child: Image.asset(
+                            "assets/balloon_${b.color}.png",
+                            height: 100,
+                          ),
+                        ),
+                      );
+                    }
+                    if (modified) balloons = nb;
+                    return Stack(
+                      children: stackItems,
+                    );
+                  },
+                  tween: Tween(begin: 0, end: 10),
+                  duration: const Duration(milliseconds: 7500),
+                ),
               ],
             ),
           ),

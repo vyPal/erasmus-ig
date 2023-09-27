@@ -26,6 +26,8 @@ class _BalloonChangerState extends State<BalloonChanger> {
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final balloonHeight = screenHeight * 0.6;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -41,12 +43,31 @@ class _BalloonChangerState extends State<BalloonChanger> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Expanded(
+            flex: 0,
+            child: SizedBox(
+              height: balloonHeight,
+              child: Padding(
+                padding: const EdgeInsets.only(top: 20),
+                child: Image.asset(
+                  "assets/balloon_$_selectedColor.png",
+                ),
+              ),
+            ),
+          ),
+          Expanded(
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: 6,
+              itemCount: 7,
               itemBuilder: (context, index) {
-                final color =
-                    ["red", "green", "blue", "yellow", "pink", "sheep"][index];
+                final color = [
+                  "red",
+                  "green",
+                  "blue",
+                  "yellow",
+                  "pink",
+                  "sheep",
+                  "zakaria"
+                ][index];
                 return GestureDetector(
                   onTap: () {
                     setState(() {
