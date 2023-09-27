@@ -37,6 +37,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   simple_animations: ^5.0.2
   games_services: any
+  shared_preferences: ^2.2.1
 
 dev_dependencies:
   flutter_test:
@@ -60,7 +61,15 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   assets:
-    - assets/balloon.png
+    - assets/balloon_red.png
+    - assets/balloon_green.png
+    - assets/balloon_blue.png
+    - assets/balloon_yellow.png
+    - assets/balloon_pink.png
+    - assets/background1.png
+    - assets/background2.png
+    - assets/background3.png
+    - assets/background4.png
     - assets/score.png
     - assets/x1multiplier.png
   # To add assets to your application, add an assets section, like this:

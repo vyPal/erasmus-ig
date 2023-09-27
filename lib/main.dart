@@ -1,6 +1,12 @@
 import 'dart:math';
 
+import 'package:balloonclicker/background_cahnger.dart';
+import 'package:balloonclicker/balloon_changer.dart';
+import 'package:balloonclicker/leaderboard.dart';
+import 'package:balloonclicker/settings.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simple_animations/animation_builder/play_animation_builder.dart';
 
 void main() {
@@ -34,7 +40,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Baloon Clicker'),
+      home: const MyHomePage(title: 'Balloon Clicker'),
     );
   }
 }
@@ -53,16 +59,32 @@ class _MyHomePageState extends State<MyHomePage> {
   final Set<int> _availableIds = {};
   final Map<int, PlayAnimationBuilder<double>> _buttons = {};
   final Map<int, PlayAnimationBuilder<double>> _balloons = {};
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  late SharedPreferences prefs;
 
   double clicks = 0;
   double multiplier = 1;
+  bool enableBalloons = true;
+  String balloonColor = "red";
+  int background = 1;
 
   @override
   void initState() {
     super.initState();
+    asyncInit();
+  }
+
+  void asyncInit() async {
+    prefs = await SharedPreferences.getInstance();
+    enableBalloons = prefs.getBool('enable_balloons') ?? true;
+    balloonColor = prefs.getString('balloon_color') ?? "red";
+    background = prefs.getInt('background') ?? 1;
+    setState(() {});
   }
 
   void _addButton(TapDownDetails details) {
+    HapticFeedback.heavyImpact();
     setState(() {
       clicks += multiplier;
       int id;
@@ -91,32 +113,41 @@ class _MyHomePageState extends State<MyHomePage> {
         onCompleted: () {
           setState(() {
             _buttons.remove(id);
+            if (!enableBalloons) _availableIds.add(id);
           });
         },
       );
-      double screenHeight = MediaQuery.of(context).size.height;
-      double screenWidth = MediaQuery.of(context).size.width;
-      double yposition = Random().nextInt(screenWidth.toInt()).toDouble();
-      _balloons[id] = PlayAnimationBuilder<double>(
-        tween: Tween(begin: screenHeight + 100, end: 0),
-        duration: const Duration(milliseconds: 5000),
-        builder: (context, value, _) {
-          return Positioned(
-            left: yposition,
-            top: value - 100,
-            child: Image.asset(
-              "assets/balloon.png",
-              height: 100,
-            ),
-          );
-        },
-        onCompleted: () {
-          setState(() {
-            _balloons.remove(id);
-            _availableIds.add(id);
-          });
-        },
-      );
+      if (enableBalloons) {
+        final List<String> myStrings = [
+          "red",
+          "green",
+          "blue",
+          "yellow",
+          "pink"
+        ];
+        final Random random = Random();
+        final String randomString = myStrings[random.nextInt(myStrings.length)];
+        _balloons[id] = PlayAnimationBuilder<double>(
+          tween: Tween(begin: details.localPosition.dy + 50, end: 0),
+          duration: const Duration(milliseconds: 1500),
+          builder: (context, value, _) {
+            return Positioned(
+              left: details.localPosition.dx - 40,
+              top: value - 100,
+              child: Image.asset(
+                "assets/balloon_$randomString.png",
+                height: 100,
+              ),
+            );
+          },
+          onCompleted: () {
+            setState(() {
+              _balloons.remove(id);
+              _availableIds.add(id);
+            });
+          },
+        );
+      }
     });
   }
 
@@ -135,15 +166,20 @@ class _MyHomePageState extends State<MyHomePage> {
     return "Congrats! We haven't coded this yet...";
   }
 
+  void _openDrawer() {
+    _scaffoldKey.currentState?.openDrawer();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
         leading: IconButton(
           icon: const Icon(Icons.menu),
-          onPressed: () {},
+          onPressed: _openDrawer,
         ),
       ),
       bottomNavigationBar: Padding(
@@ -153,16 +189,33 @@ class _MyHomePageState extends State<MyHomePage> {
           children: [
             const Spacer(),
             FloatingActionButton.extended(
-              onPressed: () {},
+              heroTag: 'balloon',
+              onPressed: () async {
+                await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const BalloonChanger()));
+                balloonColor = prefs.getString("balloon_color") ?? "red";
+                setState(() {});
+              },
               label: const Text("Balloon"),
             ),
             const Spacer(),
             FloatingActionButton.extended(
-              onPressed: () {},
+              heroTag: 'background',
+              onPressed: () async {
+                await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const BackgroundCahnger()));
+                background = prefs.getInt("background") ?? 1;
+                setState(() {});
+              },
               label: const Text("Background"),
             ),
             const Spacer(),
             FloatingActionButton(
+              heroTag: 'help',
               onPressed: () {},
               child: const Icon(Icons.question_mark),
             ),
@@ -171,7 +224,12 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       body: Container(
-        color: const Color.fromARGB(255, 204, 204, 204),
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/background$background.png"),
+            fit: BoxFit.cover,
+          ),
+        ),
         child: SizedBox(
           height: double.infinity,
           width: double.infinity,
@@ -179,28 +237,58 @@ class _MyHomePageState extends State<MyHomePage> {
             onTapDown: _addButton,
             child: Stack(
               children: [
-                ..._balloons.values,
                 Positioned(
-                  child: Row(
-                    children: [
-                      Image.asset(
-                        "assets/score.png",
-                        width: 100,
-                      ),
-                      Text(getScoreString()),
-                    ],
+                  child: Card(
+                    child: Row(
+                      children: [
+                        Image.asset(
+                          "assets/score.png",
+                          width: 100,
+                        ),
+                        Text(getScoreString()),
+                      ],
+                    ),
                   ),
                 ),
                 Center(
                   child: Image.asset(
-                    "assets/balloon.png",
+                    "assets/balloon_$balloonColor.png",
                     scale: 1.5,
                   ),
                 ),
                 ..._buttons.values,
+                ..._balloons.values,
               ],
             ),
           ),
+        ),
+      ),
+      drawer: Drawer(
+        child: ListView(
+          children: [
+            const ListTile(
+              title: Text("Balloon Clicker"),
+            ),
+            const Divider(),
+            ListTile(
+              title: const Text("Leaderboard"),
+              leading: const Icon(Icons.ballot),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const Leaderboard()));
+              },
+            ),
+            ListTile(
+              title: const Text("Settings"),
+              leading: const Icon(Icons.settings),
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const Settings()));
+              },
+            ),
+          ],
         ),
       ),
     );
