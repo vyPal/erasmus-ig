@@ -92,6 +92,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "line_icons",
+      "rootUri": "file:///home/vypal/.pub-cache/hosted/pub.dev/line_icons-2.0.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "lints",
       "rootUri": "file:///home/vypal/.pub-cache/hosted/pub.dev/lints-2.1.1",
       "packageUri": "lib/",
@@ -272,7 +278,7 @@
       "languageVersion": "3.1"
     }
   ],
-  "generated": "2023-09-27T07:44:54.420337Z",
+  "generated": "2023-09-27T09:28:10.097514Z",
   "generator": "pub",
   "generatorVersion": "3.1.0"
 }

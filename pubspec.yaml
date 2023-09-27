@@ -38,6 +38,7 @@ dependencies:
   simple_animations: ^5.0.2
   games_services: any
   shared_preferences: ^2.2.1
+  line_icons: ^2.0.3
 
 dev_dependencies:
   flutter_test:
@@ -66,6 +67,7 @@ flutter:
     - assets/balloon_blue.png
     - assets/balloon_yellow.png
     - assets/balloon_pink.png
+    - assets/balloon_sheep.png
     - assets/background1.png
     - assets/background2.png
     - assets/background3.png

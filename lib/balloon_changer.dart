@@ -43,9 +43,10 @@ class _BalloonChangerState extends State<BalloonChanger> {
           Expanded(
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: 5,
+              itemCount: 6,
               itemBuilder: (context, index) {
-                final color = ["red", "green", "blue", "yellow", "pink"][index];
+                final color =
+                    ["red", "green", "blue", "yellow", "pink", "sheep"][index];
                 return GestureDetector(
                   onTap: () {
                     setState(() {

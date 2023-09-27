@@ -239,14 +239,22 @@ class _MyHomePageState extends State<MyHomePage> {
               children: [
                 Positioned(
                   child: Card(
-                    child: Row(
-                      children: [
-                        Image.asset(
-                          "assets/score.png",
-                          width: 100,
-                        ),
-                        Text(getScoreString()),
-                      ],
+                    child: Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Image.asset(
+                            "assets/score.png",
+                            width: 100,
+                          ),
+                          Text(
+                            getScoreString(),
+                            style: const TextStyle(
+                                fontSize: 24, fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
