@@ -1,0 +1,25 @@
+{
+  "balloon": "Ballon",
+  "background": "Image de fond",
+  "leaderboard": "Classement",
+  "settings": "Paramètres",
+  "selectBalloon": "Sélectionner un ballon",
+  "equipBalloon": "Équiper",
+  "selectBackground": "Sélectionner l'arrière-plan",
+  "equipBackground": "Équiper",
+  "selectLanguage": "Sélectionner la langue",
+  "hapticFeedbackOn": "Activer la rétroaction haptique",
+  "hapticFeedbackOff": "Désactiver la rétroaction haptique",
+  "score": "{value}",
+  "@score": {
+    "placeholders": {
+      "value": {
+        "type": "double",
+        "format": "compact",
+        "optionalParameters": {
+          "decimalDigits": 2
+        }
+      }
+    }
+  }
+}
