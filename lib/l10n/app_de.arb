@@ -1,0 +1,25 @@
+{
+  "balloon": "Ballon",
+  "background": "Hintergrund",
+  "leaderboard": "Bestenliste",
+  "settings": "Einstellungen",
+  "selectBalloon": "Ballon auswählen",
+  "equipBalloon": "Ausrüsten",
+  "selectBackground": "Hintergrund auswählen",
+  "equipBackground": "Ausrüsten",
+  "selectLanguage": "Sprache auswählen",
+  "hapticFeedbackOn": "Haptisches Feedback an",
+  "hapticFeedbackOff": "Haptisches Feedback aus",
+  "score": "{value}",
+  "@score": {
+    "placeholders": {
+      "value": {
+        "type": "double",
+        "format": "compact",
+        "optionalParameters": {
+          "decimalDigits": 2
+        }
+      }
+    }
+  }
+}
