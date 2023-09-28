@@ -15,10 +15,7 @@
     "placeholders": {
       "value": {
         "type": "double",
-        "format": "compact",
-        "optionalParameters": {
-          "decimalDigits": 2
-        }
+        "format": "compact"
       }
     }
   }
