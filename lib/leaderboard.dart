@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class Leaderboard extends StatefulWidget {
   const Leaderboard({Key? key}) : super(key: key);
@@ -61,13 +62,14 @@ class _LeaderboardState extends State<Leaderboard> {
 
   @override
   Widget build(BuildContext context) {
+    AppLocalizations? l = AppLocalizations.of(context);
     // Sort the list of players based on their score
     _players.sort((a, b) => b.score.compareTo(a.score));
 
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text("Leaderboard"),
+        title: Text(l!.leaderboard),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
@@ -103,7 +105,7 @@ class _LeaderboardState extends State<Leaderboard> {
                           ),
                         ),
                         Text(
-                          getScoreString(player.score),
+                          l.score(player.score.toDouble()),
                           style: Theme.of(context).textTheme.titleLarge,
                         ),
                       ],

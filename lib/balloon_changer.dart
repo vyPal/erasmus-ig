@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class BalloonChanger extends StatefulWidget {
   const BalloonChanger({Key? key}) : super(key: key);
@@ -26,12 +27,13 @@ class _BalloonChangerState extends State<BalloonChanger> {
 
   @override
   Widget build(BuildContext context) {
+    AppLocalizations? l = AppLocalizations.of(context);
     final screenHeight = MediaQuery.of(context).size.height;
     final balloonHeight = screenHeight * 0.6;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text("Select balloon"),
+        title: Text(l!.selectBalloon),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
@@ -92,7 +94,7 @@ class _BalloonChangerState extends State<BalloonChanger> {
               prefs.setString("balloon_color", _selectedColor);
               Navigator.pop(context);
             },
-            child: const Text("Equip"),
+            child: Text(l.equipBalloon),
           ),
         ],
       ),

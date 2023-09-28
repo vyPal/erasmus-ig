@@ -1,0 +1,22 @@
+{
+  "balloon": "Balloon",
+  "background": "Background",
+  "leaderboard": "Leaderboard",
+  "settings": "Settings",
+  "selectBalloon": "Select balloon",
+  "equipBalloon": "Equip",
+  "selectBackground": "Select background",
+  "equipBackground": "Equip",
+  "selectLanguage": "Select language",
+  "hapticFeedbackOn": "Haptic feedback on",
+  "hapticFeedbackOff": "Haptic feedback off",
+  "score": "{value}",
+  "@score": {
+    "placeholders": {
+      "value": {
+        "type": "double",
+        "format": "compact"
+      }
+    }
+  }
+}

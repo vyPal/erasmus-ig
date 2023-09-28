@@ -1,5 +1,7 @@
+import 'package:balloonclicker/languages.dart';
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class Settings extends StatefulWidget {
   const Settings({Key? key}) : super(key: key);
@@ -17,10 +19,11 @@ class _SettingsState extends State<Settings> {
   double soundVol = 1;
   @override
   Widget build(BuildContext context) {
+    AppLocalizations? l = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text("Settings"),
+        title: Text(l!.settings),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
@@ -88,17 +91,22 @@ class _SettingsState extends State<Settings> {
                 },
                 icon: Icon(hapticOn ? Icons.vibration : Icons.mobile_off),
                 label: hapticOn
-                    ? const Text("Haptic feedback on")
-                    : const Text("Haptic feedback off"),
+                    ? Text(l.hapticFeedbackOn)
+                    : Text(l.hapticFeedbackOff),
               ),
             ),
             const SizedBox(height: 12),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton.icon(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const Languages()));
+                },
                 icon: const Icon(Icons.language),
-                label: const Text("Select language"),
+                label: Text(l.selectLanguage),
               ),
             ),
             const SizedBox(height: 12),

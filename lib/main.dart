@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simple_animations/simple_animations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main() {
   runApp(const MyApp());
@@ -21,6 +22,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Balloon Clicker',
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -37,7 +40,7 @@ class MyApp extends StatelessWidget {
         //
         // This works for code too, not just values: Most code changes can be
         // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightBlue),
         useMaterial3: true,
       ),
       home: const MyHomePage(title: 'Balloon Clicker'),
@@ -78,6 +81,8 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   List<Balloon> balloons = [];
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  Locale? overrideLocale = const Locale('en');
+  bool shouldOverrideLocale = false;
 
   late SharedPreferences prefs;
 
@@ -99,6 +104,10 @@ class _MyHomePageState extends State<MyHomePage> {
     balloonColor = prefs.getString('balloon_color') ?? "red";
     background = prefs.getInt('background') ?? 1;
     clicks = prefs.getDouble('score') ?? 0;
+    if (prefs.getString("locale") != null) {
+      overrideLocale = Locale(prefs.getString('locale') ?? 'en');
+      shouldOverrideLocale = true;
+    }
     setState(() {});
   }
 
@@ -157,6 +166,21 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    if (shouldOverrideLocale) {
+      return Localizations.override(
+        context: context,
+        locale: overrideLocale,
+        child: Builder(builder: (context) {
+          return theBody(context);
+        }),
+      );
+    } else {
+      return theBody(context);
+    }
+  }
+
+  Widget theBody(BuildContext context) {
+    AppLocalizations? l = AppLocalizations.of(context);
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
@@ -183,7 +207,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 balloonColor = prefs.getString("balloon_color") ?? "red";
                 setState(() {});
               },
-              label: const Text("Balloon"),
+              label: Text(l!.balloon),
             ),
             const Spacer(),
             FloatingActionButton.extended(
@@ -196,7 +220,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 background = prefs.getInt("background") ?? 1;
                 setState(() {});
               },
-              label: const Text("Background"),
+              label: Text(l.background),
             ),
             const Spacer(),
           ],
@@ -228,7 +252,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             width: 100,
                           ),
                           Text(
-                            getScoreString(),
+                            l.score(clicks),
                             style: const TextStyle(
                                 fontSize: 24, fontWeight: FontWeight.bold),
                           ),
@@ -289,7 +313,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             const Divider(),
             ListTile(
-              title: const Text("Leaderboard"),
+              title: Text(l.leaderboard),
               leading: const Icon(Icons.ballot),
               onTap: () {
                 Navigator.push(
@@ -299,7 +323,7 @@ class _MyHomePageState extends State<MyHomePage> {
               },
             ),
             ListTile(
-              title: const Text("Settings"),
+              title: Text(l.settings),
               leading: const Icon(Icons.settings),
               onTap: () {
                 Navigator.push(context,

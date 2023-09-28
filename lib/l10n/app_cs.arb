@@ -1,0 +1,22 @@
+{
+  "balloon": "Balónek",
+  "background": "Pozadí",
+  "leaderboard": "Žebříček",
+  "settings": "Nastavní",
+  "selectBalloon": "Vyber si balónek",
+  "equipBalloon": "Zvolit",
+  "selectBackground": "Vyber si pozadí",
+  "equipBackground": "Zvolit",
+  "selectLanguage": "Změna jazyku",
+  "hapticFeedbackOn": "Vibrace zapnuty",
+  "hapticFeedbackOff": "Vibrace vypnuty",
+  "score": "{value}",
+  "@score": {
+    "placeholders": {
+      "value": {
+        "type": "double",
+        "format": "compact"
+      }
+    }
+  }
+}
