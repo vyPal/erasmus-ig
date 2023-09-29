@@ -10,8 +10,8 @@ Welcome to Balloon Clicker, an exciting and addictive Android app where your goa
 - [ ]  **Achievements:** Complete achievements to earn special rewards.
 - [ ]  **Leaderboards:** Compete with friends and players worldwide for the highest score.
 - [x]  **Adaptive Design:** The game is optimized for both phones and tablets.
-- [ ]  **Sound Effects:** Engaging sound effects enhance the gaming experience.
-- [ ]  **Settings:** Customize your gaming experience with various settings.
+- [x]  **Sound Effects:** Engaging sound effects enhance the gaming experience.
+- [x]  **Settings:** Customize your gaming experience with various settings.
 ## Getting Started
 
 ### Links
