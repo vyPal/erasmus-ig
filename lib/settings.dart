@@ -27,6 +27,7 @@ class _SettingsState extends State<Settings> {
     Future.delayed(const Duration(seconds: 0), () async {
       prefs = await SharedPreferences.getInstance();
     });
+    setState(() {});
   }
 
   @override
