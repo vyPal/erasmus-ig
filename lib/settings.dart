@@ -18,6 +18,17 @@ class _SettingsState extends State<Settings> {
 
   double musicVol = 1;
   double soundVol = 1;
+
+  late SharedPreferences prefs;
+
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(const Duration(seconds: 0), () async {
+      prefs = await SharedPreferences.getInstance();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     AppLocalizations? l = AppLocalizations.of(context);
@@ -41,11 +52,9 @@ class _SettingsState extends State<Settings> {
                 FloatingActionButton(
                   heroTag: "music",
                   onPressed: () {
-                    setState(() async {
+                    setState(() {
                       musicOn = !musicOn;
                       musicVol = musicOn ? 1 : 0;
-                      SharedPreferences prefs =
-                          await SharedPreferences.getInstance();
                       prefs.setBool('musicon', musicOn);
                       prefs.setDouble('musicvol', musicVol);
                     });
