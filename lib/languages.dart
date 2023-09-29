@@ -47,8 +47,8 @@ class _LanguagesState extends State<Languages> {
     ),
     LocaleOption(
       name: 'عربي لبناني',
-      code: 'ar',
-      flag: Flag.fromCode(FlagsCode.AR, height: 50),
+      code: 'lb',
+      flag: Flag.fromCode(FlagsCode.LB, height: 50),
     )
   ];
 
@@ -62,15 +62,28 @@ class _LanguagesState extends State<Languages> {
         itemCount: opts.length,
         itemBuilder: (context, index) {
           final option = opts[index];
-          return Card(
-            child: Row(
-              children: [
-                SizedBox(
-                  width: 67,
-                  child: option.flag,
-                ),
-                Text(option.name)
-              ],
+          return GestureDetector(
+            onTap: () async {
+              final prefs = await SharedPreferences.getInstance();
+              await prefs.setString('locale', option.code);
+              // Restart the app
+              await Future.delayed(Duration(milliseconds: 500));
+              await Navigator.pushNamedAndRemoveUntil(
+                context,
+                '/',
+                (route) => false,
+              );
+            },
+            child: Card(
+              child: Row(
+                children: [
+                  SizedBox(
+                    width: 67,
+                    child: option.flag,
+                  ),
+                  Text(option.name)
+                ],
+              ),
             ),
           );
         },
