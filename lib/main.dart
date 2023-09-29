@@ -173,6 +173,10 @@ class _MyHomePageState extends State<MyHomePage> {
       player.stop();
     }
 
+    if (prefs.getBool('musicon') ?? true == false) {
+      return;
+    }
+
     List songs = [
       "Alien-Skychosic.com.mp3",
       "Ghostrifter-Official-Devyzed-Downtown-Glowchosic.com.mp3",
@@ -181,6 +185,8 @@ class _MyHomePageState extends State<MyHomePage> {
     ];
 
     player.play(AssetSource(songs[background - 1]));
+    player.setVolume(prefs.getDouble('musicvol') ?? 1);
+    player.setReleaseMode(ReleaseMode.loop);
   }
 
   @override
@@ -345,9 +351,10 @@ class _MyHomePageState extends State<MyHomePage> {
             ListTile(
               title: Text(l.settings),
               leading: const Icon(Icons.settings),
-              onTap: () {
-                Navigator.push(context,
+              onTap: () async {
+                await Navigator.push(context,
                     MaterialPageRoute(builder: (context) => const Settings()));
+                playMusic();
               },
             ),
           ],
