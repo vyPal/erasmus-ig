@@ -15,7 +15,7 @@ Welcome to Balloon Clicker, an exciting and addictive Android app where your goa
 ## Getting Started
 
 ### Links
-- [Website](Google.com)
+- [Website](AxoLab.net/download)
 - [Issue Tracker](https://github.com/vyPal/erasmus-ig/issues)
 - [App Download](https://play.google.com/)
 
