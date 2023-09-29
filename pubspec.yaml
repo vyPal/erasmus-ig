@@ -81,6 +81,10 @@ flutter:
     - assets/background4.png
     - assets/score.png
     - assets/x1multiplier.png
+    - assets/Alien-Skychosic.com.mp3
+    - assets/Ghostrifter-Official-Devyzed-Downtown-Glowchosic.com.mp3
+    - assets/Moonlit-Walkchosic.com.mp3
+    - assets/Shipwreck-Covechosic.com.mp3
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg

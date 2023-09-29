@@ -110,6 +110,7 @@ class _MyHomePageState extends State<MyHomePage> {
       overrideLocale = Locale(prefs.getString('locale') ?? 'en');
       shouldOverrideLocale = true;
     }
+    playMusic();
     setState(() {});
   }
 
@@ -167,6 +168,21 @@ class _MyHomePageState extends State<MyHomePage> {
     return x;
   }
 
+  void playMusic() {
+    if (player.state == PlayerState.playing) {
+      player.stop();
+    }
+
+    List songs = [
+      "Alien-Skychosic.com.mp3",
+      "Ghostrifter-Official-Devyzed-Downtown-Glowchosic.com.mp3",
+      "Moonlit-Walkchosic.com.mp3",
+      "Shipwreck-Covechosic.com.mp3"
+    ];
+
+    player.play(AssetSource(songs[background - 1]));
+  }
+
   @override
   Widget build(BuildContext context) {
     if (shouldOverrideLocale) {
@@ -221,6 +237,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     MaterialPageRoute(
                         builder: (context) => const BackgroundCahnger()));
                 background = prefs.getInt("background") ?? 1;
+                playMusic();
                 setState(() {});
               },
               label: Text(l.background),
