@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:balloonclicker/background_cahnger.dart';
 import 'package:balloonclicker/balloon_changer.dart';
 import 'package:balloonclicker/leaderboard.dart';
@@ -83,6 +84,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   Locale? overrideLocale = const Locale('en');
   bool shouldOverrideLocale = false;
+  final player = AudioPlayer();
 
   late SharedPreferences prefs;
 
@@ -115,6 +117,7 @@ class _MyHomePageState extends State<MyHomePage> {
     HapticFeedback.heavyImpact();
     clicks += multiplier;
     setState(() {});
+    prefs.setDouble('score', clicks);
     final List<String> myStrings = [
       "red",
       "green",
